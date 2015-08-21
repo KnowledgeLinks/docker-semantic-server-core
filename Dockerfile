@@ -37,12 +37,16 @@ RUN set -x \
         && rm bin/*.bat \
         && rm tomcat.tar.gz*
 
-COPY RWStore.properties tomcat-users.xml $CATALINA_HOME/conf/
+COPY tomcat-users.xml $CATALINA_HOME/conf/
 COPY setenv.sh $CATALINA_HOME/bin/
 COPY fedora.war fcrepo-camel.war bigdata.war $CATALINA_HOME/webapps/
-RUN set -x \
-    && mkdir -p $CATALINA_HOME/webapps/bigdata/WEB-INF/classes/ 
 
+RUN cd $CATALINA_HOME/webapps/ \
+    && apt-get install -y unzip \
+    && unzip -qq -u bigdata.war -d bigdata/ \
+    && rm bigdata.war
+
+COPY RWStore.properties $CATALINA_HOME/webapps/bigdata/WEB-INF/
 COPY log4j.properties $CATALINA_HOME/webapps/bigdata/WEB-INF/classes/
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
