@@ -39,10 +39,8 @@ RUN set -x \
 
 COPY RWStore.properties tomcat-users.xml $CATALINA_HOME/conf/
 COPY setenv.sh $CATALINA_HOME/bin/
+COPY fedora.war fcrepo-camel.war bigdata.war $CATALINA_HOME/webapps/
 RUN set -x \
-    && curl -fSL "$FCREPO_WAR_URL" -o $CATALINA_HOME/webapps/fedora.war \
-    && curl -fSL "$FCREPO_CAMEL_WAR_URL" -o $CATALINA_HOME/webapps/fcrepo-camel.war \
-    && curl -fSL "$BLAZEGRAPH_WAR_URL" -o $CATALINA_HOME/webapps/bigdata.war \
     && mkdir -p $CATALINA_HOME/webapps/bigdata/WEB-INF/classes/ 
 
 COPY log4j.properties $CATALINA_HOME/webapps/bigdata/WEB-INF/classes/
