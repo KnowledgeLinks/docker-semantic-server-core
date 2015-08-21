@@ -37,12 +37,14 @@ RUN set -x \
         && rm bin/*.bat \
         && rm tomcat.tar.gz*
 
-COPY tomcat-users.xml $CATALINA_HOME/conf/
+COPY RWStore.properties tomcat-users.xml $CATALINA_HOME/conf/
 COPY setenv.sh $CATALINA_HOME/bin/
 RUN set -x \
     && curl -fSL "$FCREPO_WAR_URL" -o $CATALINA_HOME/webapps/fedora.war \
     && curl -fSL "$FCREPO_CAMEL_WAR_URL" -o $CATALINA_HOME/webapps/fcrepo-camel.war \
-    && curl -fSL "$BLAZEGRAPH_WAR_URL" -o $CATALINA_HOME/webapps/bigdata.war
+    && curl -fSL "$BLAZEGRAPH_WAR_URL" -o $CATALINA_HOME/webapps/bigdata.war \
+    && mkdir -p $CATALINA_HOME/webapps/bigdata/WEB-INF/classes/ 
 
+COPY log4j.properties $CATALINA_HOME/webapps/bigdata/WEB-INF/classes/
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
