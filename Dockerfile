@@ -23,7 +23,7 @@ RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
 
 ENV TOMCAT_MAJOR 8
 
-ENV TOMCAT_VERSION 8.0.23
+ENV TOMCAT_VERSION 8.0.26
 ENV TOMCAT_TGZ_URL https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
 ENV FCREPO_VERSION 4.3.0
 ENV FCREPO_WAR_URL https://github.com/fcrepo4-exts/fcrepo-webapp-plus/releases/download/fcrepo-webapp-plus-$FCREPO_VERSION/fcrepo-webapp-plus-audit-$FCREPO_VERSION.war
@@ -46,7 +46,8 @@ RUN cd $CATALINA_HOME/webapps/ \
     && unzip -qq -u bigdata.war -d bigdata/ \
     && rm bigdata.war
 
-COPY RWStore.properties $CATALINA_HOME/webapps/bigdata/WEB-INF/
+COPY web.xml RWStore.properties $CATALINA_HOME/webapps/bigdata/WEB-INF/
 COPY log4j.properties $CATALINA_HOME/webapps/bigdata/WEB-INF/classes/
+
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
