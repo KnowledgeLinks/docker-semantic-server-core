@@ -10,7 +10,7 @@ RUN cd /opt/ && \
     tar xvf ${KARAF_NAME}.tar.gz && \
     mv ${KARAF_NAME} karaf ;
 WORKDIR ${KARAF_DIR}
-COPY fedora.war ${KARAF_DIR}/fedora.war
+COPY fedora.war ${KARAF_DIR}/deploy/fedora.war
 RUN bin/start && \
     sleep 10 && \
     bin/client feature:repo-add camel 2.16.2 && \
@@ -32,8 +32,8 @@ RUN bin/start && \
     bin/client feature:install wrapper && \
     sleep 5 && \
     bin/client wrapper:install && \
-    sleep 10 && \
-    bin/client osgi:install file:${KARAF_DIR}/fedora.war
+    sleep 10
+     #bin/client osgi:install file:${KARAF_DIR}/fedora.war
 
 EXPOSE 8181
 ENTRYPOINT ["/opt/karaf/bin/karaf", "start"]
