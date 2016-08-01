@@ -1,13 +1,19 @@
-FROM tomcat:9.0
+FROM ubuntu:16.04
+MAINTAINER jermnelson@gmail.com
+ENV REPO /opt/repository/
+ENV TRPSTR /opt/triplestore/
 
-ENV TOMCAT_DIR /usr/local/tomcat
+RUN apt-get update && \
+    apt-get install -y supervisor openjdk-8-jre-headless
 
-COPY fedora.war blazegraph.war $TOMCAT_DIR/webapps/
-COPY tomcat-users.xml $TOMCAT_DIR/conf/
-RUN cd $TOMCAT_DIR/webapps/ && \
-    unzip -qq -u blazegraph.war -d blazegraph/ && \
-    rm blazegraph.war
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY fedora.jar $REPO
+COPY blazegraph.jar $TRPSTR
 
-COPY GraphStore.properties web.xml RWStore.properties $TOMCAT_DIR/webapps/blazegraph/WEB-INF/
-COPY log4j.properties RWStore.properties $TOMCAT_DIR/webapps/blazegraph/WEB-INF/classes/
-#COPY RWStore.properties $TOMCAT_DIR/webapps/blazegraph/WEB-INT/
+VOLUME $HOME/fcrepo4-data
+VOLUME $TRPSTR/data 
+#COPY fedora.jar $HOME
+EXPOSE 8080
+EXPOSE 9999
+
+CMD ["/usr/bin/supervisord","-n"]
