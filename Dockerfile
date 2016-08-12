@@ -9,8 +9,9 @@ RUN apt-get update && \
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY fedora.jar $REPO
 COPY blazegraph.jar $TRPSTR
+COPY RWStore.properties $TRPSTR
 
-VOLUME $HOME/fcrepo4-data
+VOLUME $REPO/fcrepo4-data
 VOLUME $TRPSTR/data 
 #COPY fedora.jar $HOME
 EXPOSE 8080
